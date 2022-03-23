@@ -26,12 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  String? time_of_day;
+  String time_of_day = "Loading...";
 
   _date_time() {
     var now_time = DateTime.now();
     setState(() {
-      time_of_day = now_time.hour.toString() + " : " + now_time.minute.toString() + " : " + now_time.second.toString();
+      time_of_day = now_time.hour.toString().padLeft(2, '0') + " : "
+                  + now_time.minute.toString().padLeft(2, '0') + " : "
+                  + now_time.second.toString().padLeft(2, '0');
     });
   }
 
@@ -58,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    time_of_day!,
+                    time_of_day,
                     style: const TextStyle(
                       color: Color.fromRGBO(17, 0, 104, 1),
                       fontSize: 40.0,
