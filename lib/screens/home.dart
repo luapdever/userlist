@@ -1,7 +1,10 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+
 import 'package:userlist/components/appbar.dart';
 import 'package:userlist/screens/AddUser.dart';
 
-import 'package:flutter/material.dart';
 // import 'dart:convert';
 // import "package:userlist/Https/request.dart";
 
@@ -19,8 +22,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Timer.periodic(Duration(seconds: 1), (Timer t) => { _date_time() });
 
+  }
 
+  String? time_of_day;
+
+  _date_time() {
+    var now_time = DateTime.now();
+    setState(() {
+      time_of_day = now_time.hour.toString() + " : " + now_time.minute.toString() + " : " + now_time.second.toString();
+    });
   }
 
   @override
@@ -28,28 +40,48 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       
       appBar: BaseAppBar(titlePage: "UserList", context: context,),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Title(
-              color: const Color.fromRGBO(17, 0, 104, 1),
-              child: Text("Welcome !")
-            ),
-            Text(TimeOfDay.now().toString()),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => AddUserScreen()
+      body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Title(
+                    color: const Color.fromRGBO(17, 0, 104, 1),
+                    child: const Text(
+                      "Welcome !",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    )
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    time_of_day!,
+                    style: const TextStyle(
+                      color: Color.fromRGBO(17, 0, 104, 1),
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  const Text("Click here to sign in."),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => AddUserScreen()
+                        )
+                      );
+                    },
+                    child: Text("Register")
                   )
-                );
-              },
-              child: Text("Register")
-            )
-          ],
-        ),
-      )
+                ],
+              )
+            ),
+          ),
+        )
     );
   }
   // Widget build(BuildContext context) {

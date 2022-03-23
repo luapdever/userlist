@@ -22,16 +22,6 @@ class BaseAppBar extends AppBar {
           },
           icon: const Icon(Icons.list)
         ),
-        IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (BuildContext context) => AddUserScreen()
-              )
-            );
-          },
-          icon: const Icon(Icons.list)
-        ),
       ],
   );
 }

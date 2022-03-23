@@ -23,7 +23,23 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(17, 0, 104, 1),
       body: Center(
-        child: Image.asset('splash.png'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'splash.png',
+              width: 80,
+            ),
+            const Divider(),
+            const Text(
+              "User list management",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0
+              )
+            )
+          ],
+        ),
       ),
     );
   }
