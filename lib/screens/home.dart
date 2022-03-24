@@ -48,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Image.asset(
+                    "bg_img.png"
+                  ),
                   Title(
                     color: const Color.fromRGBO(17, 0, 104, 1),
                     child: const Text(
@@ -83,7 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ),
           ),
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed("add_user");
+          },
+          child: const Icon(Icons.add),
+        ),
     );
   }
   // Widget build(BuildContext context) {

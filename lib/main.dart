@@ -1,11 +1,11 @@
+import 'package:userlist/screens/AddUser.dart';
+import 'package:userlist/screens/ListUserScreen.dart';
+import 'package:userlist/screens/UserScreen.dart';
+
 import '/screens/home.dart';
 import '/screens/splash.dart';
 import 'package:flutter/material.dart';
-import 'screens/login.dart';
-import 'screens/register.dart';
-//import 'screens/home.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,19 +17,24 @@ class MyApp extends StatelessWidget {
     return  MaterialApp(
       title: "UserList",
       //home: RegisterScreen(),
-      home: CheckAuth(),
+      home: StartApp(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        "home": (context) => HomeScreen(),
+        "list_user": (context) => ListUserScreen(),
+        "add_user": (context) => AddUserScreen(),
+        "user": (context) => UserScreen(),
+      },
     );
   }
 }
 
-class CheckAuth extends StatefulWidget {
+class StartApp extends StatefulWidget {
   @override
-  _CheckAuthState createState() => _CheckAuthState();
+  _StartAppState createState() => _StartAppState();
 }
 
-class _CheckAuthState extends State<CheckAuth> {
-  bool _isAuth = false;
+class _StartAppState extends State<StartApp> {
   @override
   void initState() {
     super.initState();
