@@ -2,8 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:userlist/Models/Arguments/UserArguments.dart';
+import 'package:userlist/Models/User.dart';
 import 'package:userlist/components/appbar.dart';
-import 'package:userlist/screens/UserScreen.dart';
 import 'dart:convert';
 import "package:userlist/Https/request.dart";
 
@@ -25,44 +25,7 @@ class _ListUserScreenState extends State<ListUserScreen> {
     super.initState();
     
     setState(() {
-      _list_user = [
-        {
-          "id" : 1,
-          "first_name" : "Luap",
-          "name" : "Dever",
-          "birthday" : DateTime.now(),
-          "adress" : "Ad058 Est",
-          "phone" : "22951486388",
-          "mail" : "example@gmail.com",
-          "gender" : "masculin",
-          "picture" : "https://all-my-files.000webhostapp.com/uploads/articles/images/48LC97aj1VBCN7bOwbUBry7W3rxm1rwUaJSUu6nh.jpg",
-          "citation" : "Take more courage for flying high"
-        },
-        {
-          "id" : 2,
-          "first_name" : "Luap 2",
-          "name" : "Dever",
-          "birthday" : DateTime.now(),
-          "adress" : "Ad058 Est",
-          "phone" : "22951486388",
-          "mail" : "example@gmail.com",
-          "gender" : "masculin",
-          "picture" : "https://all-my-files.000webhostapp.com/uploads/articles/images/48LC97aj1VBCN7bOwbUBry7W3rxm1rwUaJSUu6nh.jpg",
-          "citation" : "Take more courage for flying high"
-        },
-        {
-          "id" : 1,
-          "first_name" : "Luap 3",
-          "name" : "Dever",
-          "birthday" : DateTime.now(),
-          "adress" : "Ad058 Est",
-          "phone" : "22951486388",
-          "mail" : "example@gmail.com",
-          "gender" : "masculin",
-          "picture" : "https://all-my-files.000webhostapp.com/uploads/articles/images/48LC97aj1VBCN7bOwbUBry7W3rxm1rwUaJSUu6nh.jpg",
-          "citation" : "Take more courage for flying high"
-        },
-      ];
+      _list_user = User().get_list();
 
       isLoading = false;
     });
@@ -72,7 +35,10 @@ class _ListUserScreenState extends State<ListUserScreen> {
     return Card(
       child: ListTile(
         onTap: () {
-          Navigator.of(context).pushNamed("user", arguments: { "id": user["id"] });
+          Navigator.of(context).pushNamed(
+            "user",
+            arguments: UserArguments(user["id"], user["first_name"] + user["name"])
+          );
         },
         leading: CircleAvatar(
           backgroundImage: NetworkImage(user["picture"]),
@@ -81,7 +47,10 @@ class _ListUserScreenState extends State<ListUserScreen> {
         subtitle: Text(user["mail"]),
         trailing: IconButton(
           onPressed: () {
-            Navigator.of(context).pushNamed("user", arguments: UserArguments(user["id"], user["first_name"] + user["name"]));
+            Navigator.of(context).pushNamed(
+              "user",
+              arguments: UserArguments(user["id"], user["first_name"] + user["name"])
+            );
           },
           icon: const Icon(Icons.remove_red_eye_outlined)
         ),
@@ -132,6 +101,12 @@ class _ListUserScreenState extends State<ListUserScreen> {
               )
             ],
           ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed("add_user");
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

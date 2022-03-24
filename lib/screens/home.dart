@@ -40,59 +40,60 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      appBar: BaseAppBar(titlePage: "UserList", context: context,),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "bg_img.png"
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("list_bg.jpg"),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(Colors.black, BlendMode.softLight),
+          )
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Text(
+                  "Welcome !",
+                  style: TextStyle(
+                    color: Color(0xFF110068),
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold
                   ),
-                  Title(
-                    color: const Color.fromRGBO(17, 0, 104, 1),
-                    child: const Text(
-                      "Welcome !",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold
-                      ),
-                    )
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  time_of_day,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    time_of_day,
-                    style: const TextStyle(
-                      color: Color.fromRGBO(17, 0, 104, 1),
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold
+                ),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("add_user");
+                      },
+                      child: const Text("Register")
                     ),
-                  ),
-                  const SizedBox(height: 10,),
-                  const Text("Click here to sign in."),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => AddUserScreen()
-                        )
-                      );
-                    },
-                    child: Text("Register")
-                  )
-                ],
-              )
-            ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacementNamed("list_user");
+                      },
+                      child: const Text("View list")
+                    ),
+                  ],
+                )
+              ],
+            )
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed("add_user");
-          },
-          child: const Icon(Icons.add),
-        ),
+      ),
     );
   }
   // Widget build(BuildContext context) {

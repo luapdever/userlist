@@ -1,5 +1,5 @@
 class UserArguments {
-  final String id;
+  final int id;
   final String fullName;
 
   UserArguments(this.id, this.fullName);

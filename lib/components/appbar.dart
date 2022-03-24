@@ -13,7 +13,7 @@ class BaseAppBar extends AppBar {
             "icon.png",
             width: 40,
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(width: 10),
           Text(titlePage)
         ],
       ),

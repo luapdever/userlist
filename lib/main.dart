@@ -19,6 +19,9 @@ class MyApp extends StatelessWidget {
       //home: RegisterScreen(),
       home: StartApp(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       routes: {
         "home": (context) => HomeScreen(),
         "list_user": (context) => ListUserScreen(),
