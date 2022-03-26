@@ -1,6 +1,7 @@
 import 'package:userlist/screens/AddUser.dart';
 import 'package:userlist/screens/ListUserScreen.dart';
 import 'package:userlist/screens/UserScreen.dart';
+import 'package:userlist/screens/members.dart';
 
 import '/screens/home.dart';
 import '/screens/splash.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         "list_user": (context) => ListUserScreen(),
         "add_user": (context) => AddUserScreen(),
         "user": (context) => UserScreen(),
+        "members":(context) => const MembersScreen()
       },
     );
   }

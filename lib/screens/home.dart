@@ -2,9 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:userlist/components/appbar.dart';
-import 'package:userlist/screens/AddUser.dart';
-
 // import 'dart:convert';
 // import "package:userlist/Https/request.dart";
 
@@ -17,24 +14,39 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? name;
-  var _user = [];
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(Duration(seconds: 1), (Timer t) => { _date_time() });
-
-  }
-
-  String time_of_day = "Loading...";
+  TextStyle textStyle = const TextStyle( color: Colors.white, letterSpacing: 12 );
+  String timeOfDday = "Loading...";
+  Timer? _timer;
 
   _date_time() {
     var now_time = DateTime.now();
     setState(() {
-      time_of_day = now_time.hour.toString().padLeft(2, '0') + " : "
+      timeOfDday = now_time.hour.toString().padLeft(2, '0') + " : "
                   + now_time.minute.toString().padLeft(2, '0') + " : "
                   + now_time.second.toString().padLeft(2, '0');
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _timer = timer;
+      });
+      _date_time();
+    });
+    Timer(const Duration(milliseconds: 1300), () {
+      setState(() {
+        textStyle = const TextStyle( color: Color(0xFF110068), letterSpacing: 0 );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer!.cancel();
+    super.dispose();
   }
 
   @override
@@ -53,17 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text(
-                  "Welcome !",
-                  style: TextStyle(
-                    color: Color(0xFF110068),
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold
+                AnimatedDefaultTextStyle(
+                  style: textStyle,
+                  duration: const Duration(seconds: 1),
+                  child: const Text(
+                    "Welcome !",
+                    style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  time_of_day,
+                  timeOfDday,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 40.0,

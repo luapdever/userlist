@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:userlist/screens/home.dart';
+import 'package:userlist/sql_db/sql_helper.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -12,8 +13,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    SQLHelper.db();
     Timer(
-        Duration(seconds: 3),
+        const Duration(seconds: 3),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => HomeScreen())));
   }

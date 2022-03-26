@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import "package:userlist/Https/request.dart";
 import 'package:userlist/components/appbar.dart';
+import 'package:userlist/sql_db/sql_helper.dart';
 
 class AddUserScreen extends StatefulWidget {
   AddUserScreen({Key? key}) : super(key: key);
@@ -23,49 +26,324 @@ class AddUserScreen extends StatefulWidget {
 // "citation" : "Take more courage for flying high"
 
 class _AddUserScreenState extends State<AddUserScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
-  String? _first_name;
-  final _firstNameController = TextEditingController();
+  String? firstName;
+  final firstNameController = TextEditingController();
 
-  String? _name;
-  final _nameController = TextEditingController();
+  String? name;
+  final nameController = TextEditingController();
 
-  DateTime? _birthday;
-  final _birthdayController = TextEditingController();
+  DateTime? birthday;
+  final birthdayController = TextEditingController();
 
-  String? _adress;
-  final _adressController = TextEditingController();
+  String? adress;
+  final adressController = TextEditingController();
 
-  String? _phone;
-  final _phoneController = TextEditingController();
+  String? phone;
+  final phoneController = TextEditingController();
   
-  String? _mail;
-  final _mailController = TextEditingController();
+  String? mail;
+  final mailController = TextEditingController();
 
-  String? _gender;
-  final _genderController = TextEditingController();
+  String? gender;
+  final genderController = TextEditingController();
 
-  String? _citation;
-  final _citationController = TextEditingController();
+  String? citation;
+  final citationController = TextEditingController();
 
+  File? picture; 
 
+  String dateFormat(DateTime date) {
+    if(date == null) {
+      return "";
+    }
+    return date.year.toString() + "-" + date.month.toString().padLeft(2, "0") + "-" + date.day.toString().padLeft(2, "0");
+  } 
+
+  _showMsg(msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () {
+            // Code to execute.
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      birthday = DateTime.parse("2000-01-01");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BaseAppBar(titlePage: "Register", context: context),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(""),
-              SizedBox(height: 15.0),
-
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Center(
+          child: SingleChildScrollView(
+              child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text(
+                  'Your informations ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                    color: Color.fromRGBO(17, 0, 104, 1)
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: firstNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'First Name',
+                    prefixIcon: Icon(Icons.supervised_user_circle_outlined),
+                  ),
+                  validator: (firstNameValue) {
+                    if (firstNameValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    firstName = firstNameValue;
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Last Name',
+                    prefixIcon: Icon(Icons.supervised_user_circle_outlined),
+                  ),
+                  validator: (nameValue) {
+                    if (nameValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    name = nameValue;
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.none,
+                  controller: TextEditingController(text: dateFormat(birthday!)),
+                  decoration: const InputDecoration(
+                    labelText: 'Birth Date',
+                    prefixIcon: Icon(Icons.calendar_month_outlined),
+                  ),
+                  onTap: () async {
+                    DateTime? dateTime = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.parse("2000-01-01"),
+                      firstDate: DateTime.parse("1960-01-01"),
+                      lastDate: DateTime.now()
+                    );
+                    
+                    if(mounted && dateTime != null) {
+                      setState(() {
+                        birthday = dateTime;
+                      });
+                    }
+                  },
+                  validator: (birthdayValue) {
+                    if (birthdayValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: mailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email Adress',
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                  validator: (emailValue) {
+                    if (emailValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    mail = emailValue;
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.streetAddress,
+                  controller: adressController,
+                  decoration: const InputDecoration(
+                    labelText: 'Adress',
+                    prefixIcon: Icon(Icons.location_city),
+                  ),
+                  validator: (adressValue) {
+                    if (adressValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    adress = adressValue;
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: phoneController,
+                  decoration: const InputDecoration(
+                      labelText: 'Telephone Number',
+                      prefixIcon: Icon(Icons.phone)),
+                  validator: (phoneValue) {
+                    if (phoneValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    phone = phoneValue;
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: const [
+                    Text("Gender")
+                  ],
+                ),
+                Row(
+                  children: [
+                    Radio(
+                      value: "male",
+                      groupValue: gender,
+                      onChanged: (String? value) {
+                        if(value != null) {
+                          setState(() {
+                            gender = value;
+                          });
+                        }
+                      }
+                    ),
+                    const Text("Male"),
+                    const SizedBox(width: 10),
+                    Radio(
+                      value: "female",
+                      groupValue: gender,
+                      onChanged: (String? value) {
+                        if(value != null) {
+                          setState(() {
+                            gender = value;
+                          });
+                        }
+                      }
+                    ),
+                    const Text("Female"),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: citationController,
+                  decoration: const InputDecoration(
+                      hintText: 'Citation',
+                  ),
+                  validator: (citationValue) {
+                    if (citationValue!.isEmpty) {
+                      return 'This field is required';
+                    }
+                    citation = citationValue;
+                    return null;
+                  },
+                  maxLines: 4,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      _saveUser();
+                    },
+                    color: Colors.blue,
+                    child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                      "Save",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          )),
         ),
       ),
     );
+  }
+
+  _saveUser() {
+    SQLHelper.deleteItem(3).then((value) => null);
+    SQLHelper.deleteItem(4).then((value) => null);
+    if (_formKey.currentState!.validate()) {
+      isLoading = true;
+      var data = {
+        'mail': mail,
+        'firstName': firstName,
+        'name': name,
+        'phone': phone,
+        'adress': adress,
+        'gender': gender,
+        'citation': citation,
+        'birthday': dateFormat(birthday!),
+        "picture": "bg_img.png"
+      };
+
+      SQLHelper.createItem(data).then((value) {
+        if(value != 0) {
+          _showMsg("User registred successfully.");
+          Navigator.of(context).pushReplacementNamed("list_user");
+        } else {
+          _showMsg("User not registred.");
+        }
+      });
+    } else {
+      isLoading = false;
+      _showMsg("Some field is missed.");
+    }
   }
 }
