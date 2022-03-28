@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import "package:userlist/Https/request.dart";
 import 'package:userlist/components/appbar.dart';
 import 'package:userlist/sql_db/sql_helper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddUserScreen extends StatefulWidget {
   AddUserScreen({Key? key}) : super(key: key);
@@ -53,7 +52,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
   String? citation;
   final citationController = TextEditingController();
 
-  File? picture; 
+  String? picture;
+  File? imageFile;
 
   String dateFormat(DateTime date) {
     if(date == null) {
@@ -74,6 +74,37 @@ class _AddUserScreenState extends State<AddUserScreen> {
         ),
       ),
     );
+  }
+
+
+  /// Get from gallery
+  _getFromGallery() async {
+    PickedFile pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+        picture = pickedFile.path;
+      });
+    }
+  }
+
+  /// Get from Camera
+  _getFromCamera() async {
+    PickedFile pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+        picture = pickedFile.path;
+      });
+    }
   }
 
   @override
@@ -107,6 +138,43 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 ),
                 const SizedBox(
                   height: 25,
+                ),
+                Card(
+                  child: imageFile == null
+                  ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          SizedBox(width: 10),
+                          Text("Picture")
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _getFromCamera();
+                            },
+                            icon: const Icon(Icons.camera_alt)
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _getFromGallery();
+                            },
+                            icon: const Icon(Icons.image)
+                          )
+                        ],
+                      )
+                    ]
+                  )
+                  : Container(
+                    height: 200,
+                    child: Image.file(
+                      imageFile!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
@@ -317,8 +385,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
   }
 
   _saveUser() {
-    SQLHelper.deleteItem(3).then((value) => null);
-    SQLHelper.deleteItem(4).then((value) => null);
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       var data = {
@@ -330,7 +396,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         'gender': gender,
         'citation': citation,
         'birthday': dateFormat(birthday!),
-        "picture": "bg_img.png"
+        "picture": picture
       };
 
       SQLHelper.createItem(data).then((value) {

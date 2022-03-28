@@ -1,11 +1,9 @@
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:userlist/Models/Arguments/UserArguments.dart';
 import 'package:userlist/Models/User.dart';
 import 'package:userlist/components/appbar.dart';
-import 'dart:convert';
-import "package:userlist/Https/request.dart";
 import 'package:userlist/sql_db/sql_helper.dart';
 
 class ListUserScreen extends StatefulWidget {
@@ -44,7 +42,7 @@ class _ListUserScreenState extends State<ListUserScreen> {
         },
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: AssetImage(user["picture"]),
+            backgroundImage: FileImage(File(user["picture"].toString())),
           ),
           title: Text(User.getFullName(user)),
           subtitle: Text(user["mail"]),

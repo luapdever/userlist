@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:userlist/Models/Arguments/UserArguments.dart';
@@ -69,24 +71,10 @@ class _UserState extends State<MainScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Image.asset(
-                    _user["picture"].toString(),
-                    // loadingBuilder: (context, child, loadingProgress) {
-                    //   if(loadingProgress == null) {
-                    //     return child;
-                    //   } else {
-                    //     return Center(
-                    //       child: Column(
-                    //         children: const [
-                    //           SizedBox(height: 20),
-                    //           CircularProgressIndicator(),
-                    //           SizedBox(height: 20),
-                    //           Text("Loading image")
-                    //         ],
-                    //       ),
-                    //     );
-                    //   }
-                    // },
+                  Image.file(
+                    File(_user["picture"].toString()),
+                    height: 200,
+                    fit: BoxFit.cover,
                   ),
                   const SizedBox(height: 20),
                   Title(
@@ -99,16 +87,59 @@ class _UserState extends State<MainScreen> {
                       ),
                     )
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+                  Text(_user["citation"].toString()),
+                  const SizedBox(height: 20),
                   Card(child: Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person),
+                        const SizedBox(width: 5),
+                        Text(_user["gender"].toString())
+                      ],
+                    ),
+                  )),
+                  Card(child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.date_range),
+                        const SizedBox(width: 5),
+                        Text(_user["birthday"].toString())
+                      ],
+                    ),
+                  )),
+                  Card(child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Row(
                       children: [
                         const Icon(Icons.email),
-                        Text(_user["picture"].toString())
+                        const SizedBox(width: 5),
+                        Text(_user["mail"].toString())
                       ],
                     ),
-                  ))
+                  )),
+                  Card(child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.phone),
+                        const SizedBox(width: 5),
+                        Text(_user["phone"].toString())
+                      ],
+                    ),
+                  )),
+                  Card(child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.location_city),
+                        const SizedBox(width: 5),
+                        Text(_user["adress"].toString())
+                      ],
+                    ),
+                  )),
                 ],
               )
             ),
