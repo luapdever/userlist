@@ -4,10 +4,10 @@ A new group Flutter project.
 
 # Group Members : Group 
 
-- ABDOULAYE Nadjath
-- ADJABONI Carel
-- SANNY Khaled
-- ZANNOU Paul
+- ABDOULAYE Nadjath (IM)
+- ADJABONI Carel (IM)
+- SANNY Khaled (IM)
+- ZANNOU Paul (IM)
 
 ## Getting Started
 
