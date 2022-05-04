@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:userlist/Https/network.dart';
 import 'package:userlist/Models/Arguments/UserArguments.dart';
 import 'package:userlist/Models/User.dart';
 import 'package:userlist/components/appbar.dart';
@@ -23,7 +24,14 @@ class _ListUserScreenState extends State<ListUserScreen> {
   void initState() {
     super.initState();
     
-    SQLHelper.getItems().then((value) {
+    // SQLHelper.getItems().then((value) {
+    //   setState(() {
+    //     _listUser = value;
+    //     isLoading = false;
+    //   });
+    // });
+    
+    HTTPNetwork.getUsers().then((value) {
       setState(() {
         _listUser = value;
         isLoading = false;
@@ -42,11 +50,19 @@ class _ListUserScreenState extends State<ListUserScreen> {
         },
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: FileImage(File(user["picture"].toString())),
+            backgroundImage: User.Leading(user["picture"]),
           ),
           title: Text(User.getFullName(user)),
-          subtitle: Text(user["mail"]),
-          trailing: const Icon(Icons.remove_red_eye_outlined)
+          subtitle: Text(user["phone"]),
+          trailing: IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                "update_user",
+                arguments: UserArguments(user["id"], User.getFullName(user))
+              );
+            }, 
+            icon: const Icon(Icons.edit)
+          )
         ),
       )
     );
@@ -58,12 +74,17 @@ class _ListUserScreenState extends State<ListUserScreen> {
     return Scaffold(
       appBar: BaseAppBar(titlePage: "List", context: context),
       body: isLoading ? 
-        const Center(child: CircularProgressIndicator())
+        Center( child: Column(mainAxisAlignment: MainAxisAlignment.center ,children: const[
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Text("Loading, wait...")
+          ]),
+        )
         : Container(
           padding: const EdgeInsets.only(
             top: 16.0
           ),
-          child: Column(
+          child: SingleChildScrollView(child: Column(
             children: [
               Title(
                 color: const Color.fromRGBO(17, 0, 104, 1),
@@ -92,7 +113,7 @@ class _ListUserScreenState extends State<ListUserScreen> {
                 }
               )
             ],
-          ),
+          )),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromRGBO(17, 0, 104, 1),

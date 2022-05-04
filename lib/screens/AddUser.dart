@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:userlist/Https/network.dart';
 import 'package:userlist/components/appbar.dart';
 import 'package:userlist/sql_db/sql_helper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,18 +12,6 @@ class AddUserScreen extends StatefulWidget {
   @override
   State<AddUserScreen> createState() => _AddUserScreenState();
 }
-
-
-// "id" : 1,
-// "first_name" : "Luap",
-// "name" : "Dever",
-// "birthday" : DateTime.now(),
-// "adress" : "Ad058 Est",
-// "phone" : "22951486388",
-// "mail" : "example@gmail.com",
-// "gender" : "masculin",
-// "picture" : "http://localhost:8000/img/test.jpg",
-// "citation" : "Take more courage for flying high"
 
 class _AddUserScreenState extends State<AddUserScreen> {
   final _formKey = GlobalKey<FormState>();
@@ -363,7 +352,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     },
                     color: Colors.blue,
                     child: isLoading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator(color: Colors.white)
                     : const Text(
                       "Save",
                       style: TextStyle(
@@ -386,11 +375,13 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   _saveUser() {
     if (_formKey.currentState!.validate()) {
-      isLoading = true;
+      setState(() {
+        isLoading = true;
+      });
       var data = {
         'mail': mail,
-        'firstName': firstName,
-        'name': name,
+        'firstname': firstName,
+        'lastname': name,
         'phone': phone,
         'adress': adress,
         'gender': gender,
@@ -399,14 +390,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
         "picture": picture
       };
 
-      SQLHelper.createItem(data).then((value) {
-        if(value != 0) {
+      HTTPNetwork.addUser(data).then((value) {
+        if(value) {
           _showMsg("User registred successfully.");
           Navigator.of(context).pushReplacementNamed("list_user");
         } else {
+          isLoading = false;
           _showMsg("User not registred.");
         }
       });
+      
+      // SQLHelper.createItem(data).then((value) {
+      //   if(value != 0) {
+      //     _showMsg("User registred successfully.");
+      //     Navigator.of(context).pushReplacementNamed("list_user");
+      //   } else {
+      //     _showMsg("User not registred.");
+      //   }
+      // });
     } else {
       isLoading = false;
       _showMsg("Some field is missed.");

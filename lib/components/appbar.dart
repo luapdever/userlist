@@ -36,13 +36,22 @@ class BaseAppBar extends AppBar {
           return [
             PopupMenuItem(child: TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamed("members");
+                Navigator.of(context).pushNamed("albums");
               },
               child: const Text(
-                "Group members",
+                "Albums",
                 style: TextStyle(color: Colors.black),
               )
-            ))
+            )),
+            // PopupMenuItem(child: TextButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pushNamed("members");
+            //   },
+            //   child: const Text(
+            //     "Group members",
+            //     style: TextStyle(color: Colors.black),
+            //   )
+            // )),
           ];
         })
       ],
